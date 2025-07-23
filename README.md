@@ -1,29 +1,7 @@
-# account_manag
+## Управление учетными записями
 
-This template should help get you started developing with Vue 3 in Vite.
+Приложение позволяет создавать, обновлять, сохранять или удалять учетные записи. Сохранение записей реализовано через LockalStorage.
+При потере фокуса поля происходит валидация. при успешной валидации значение сохраняется, иначе появляется сообщение об ошибке.
+В поле Метка можно вводить значения через ;.
 
-## Recommended IDE Setup
-
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
-
-## Customize configuration
-
-See [Vite Configuration Reference](https://vite.dev/config/).
-
-## Project Setup
-
-```sh
-npm install
-```
-
-### Compile and Hot-Reload for Development
-
-```sh
-npm run dev
-```
-
-### Compile and Minify for Production
-
-```sh
-npm run build
-```
+Для запуска проекта необходимо склонировать репозиторий, установить зависимости npm run i и запустить сборку npm run dev.
