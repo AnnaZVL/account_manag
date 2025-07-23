@@ -1,9 +1,11 @@
+import { Label } from "@/types/inputs";
+
 export interface Account {
     id: number
-    label: string;
+    label: Label[];
     type: AccountType
     login: string
-    password: string   
+    password: string | null
 };
 
 export enum AccountType {

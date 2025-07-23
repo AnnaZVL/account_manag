@@ -7,50 +7,98 @@ import { computed, ref } from 'vue';
 
 const props = defineProps<InputProp>();
 
-const isVisible = ref(false);
+const emit = defineEmits<{
+    (event: 'update:modelValue', value: string | null): void;
+}>();
+
+const isVisible = ref<boolean>(false);
+const errorMessage = ref<string>('');
+const isValid = ref<boolean>(false);
 
 const toggleVisibility = (): void => {
     isVisible.value = !isVisible.value;
 };
 
-const inputType = computed(() => {
+const inputType = computed<string>(() => {
     if (props.type === 'text') return 'text';
-    return (isVisible.value ? 'text' : 'password')
+    return isVisible.value ? 'text' : 'password';
 });
 
 const iconComponent = computed(() => (isVisible.value ? IconPasswordShowed : IconPasswordHidden));
-console.log('object', props);
+
+const handelValue = (e: Event): void => {
+    errorMessage.value = '';
+    isValid.value = false;
+
+    const target = e.target as HTMLInputElement;
+
+    if (props.required ) {
+        if (target.value === '') {            
+            isValid.value = false;          
+            errorMessage.value = `Поле обязательно для заполнения`;
+        } else if (target.value.length >= props.maxLength) {            
+            isValid.value = false;          
+            errorMessage.value = `Максимальное количество символов: ${props.maxLength}`;
+        } else {  
+            isValid.value = true;
+            emit('update:modelValue', target.value);
+        }
+    } else {
+        errorMessage.value = '';
+        isValid.value = true;
+        emit('update:modelValue', target.value);
+    }
+};
 </script>
 
 <template>
-<label class="block w-full"  :for="props.name">
-    <div class="relative">   
-        <input
-            class="px-4 py-2 w-full bg-transparent rounded-md border-1 border-indigo-400 hover:bg-indigo-100 transition-colors"
-            :class="{ 'border-red-300': !!props.errorMessage  }"
-            :name="props.name"
-            :type="inputType"
-            :maxlength="props.maxLenght"
-            autocomplete="off"
-            :required="props.required"
-        />
-        <component
-            :is="iconComponent"
-            @click="toggleVisibility"
-            class="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 cursor-pointer"
-            v-if="props.type === 'password'"            
-        />
-    </div>
-        <span class="error block mt-1 text-xs text-red-300 min-h-[1.5em]" v-if="props.errorMessage">{{
-            props.errorMessage
-        }}</span>
+    <label class="block w-full" :for="props.name">
+        <div class="relative">
+            <input
+                class="px-4 py-2 w-full bg-transparent rounded-md border-1 hover:bg-indigo-100 transition-colors"
+                :class="{
+                'border-1 border-red-400': !!errorMessage,
+                'border-2 border-green-400': isValid && !errorMessage,
+                'border-1 border-indigo-300': !isValid && !errorMessage
+            }"
+                :value="props.modelValue ?? ''"
+                :name="props.name"
+                :type="inputType"
+                :maxlength="props.maxLength"
+                autocomplete="off"
+                :required="props.required"
+                @blur="handelValue"
+            />
+            <component
+                :is="iconComponent"
+                @click="toggleVisibility"
+                class="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 cursor-pointer"
+                v-if="props.type === 'password'"
+            />
+
+            <transition name="fade">
+                <span
+                    class="error absolute left-2 top-full mt-1 text-xs text-red-400"
+                    v-if="errorMessage"
+                    >{{ errorMessage }}</span
+                >
+            </transition>
+        </div>
     </label>
-    
 </template>
 
 <style lang="scss" scoped>
-input[type='password']::-ms-reveal,
-input[type='password']::-ms-clear {
-    display: none;
-}
+    input[type='password']::-ms-reveal,
+    input[type='password']::-ms-clear {
+        display: none;
+    }
+
+    .fade-enter-active,
+    .fade-leave-active {
+        transition: opacity 0.2s ease;
+    }
+    .fade-enter-from,
+    .fade-leave-to {
+        opacity: 0;
+    }
 </style>

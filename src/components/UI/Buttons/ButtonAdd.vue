@@ -1,10 +1,9 @@
 <script setup lang="ts">
-import { useAccountStore } from '@/store/accountStore';
+import { useAccountStore } from '@/modules/account/store/accountStore';
 
 const accountsStore = useAccountStore();
 
-const addAccount = () => {
-    console.log('Add');
+const addAccount = (): void => {    
     accountsStore.addAccount()
 };
 </script>

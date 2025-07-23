@@ -1,21 +1,20 @@
 <script setup lang="ts">
-import type { Account } from '@/types/account';
-import IconDelete from '../Icons/IconDelete.vue';
+import type { Account } from '@/modules/account/types/account';
+import IconDelete from '@/components/UI/Icons/IconDelete.vue';
 
-import { useAccountStore } from '@/store/accountStore';
+import { useAccountStore } from '@/modules/account/store/accountStore';
 
 const props = defineProps<{ id: Account['id'] }>();
 
 const accountStore = useAccountStore()
 
-const deleteAccount = () => {
-    console.log('DELETE', props.id);
+const deleteAccount = (): void => {    
     accountStore.deleteAccount(props.id)
 };
 </script>
 
 <template>
-    <button class="btn-del w-8 h-8 hover:scale-1.2 transition-transform" @click="deleteAccount" aria-label="Удалить аккаунт">
+    <button class="btn-del w-8 h-8 hover:scale-1.2 transition-transform" @click="deleteAccount" type="button" aria-label="Удалить аккаунт">
         <IconDelete/>
     </button>
 </template>

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import ButtonAdd from '../UI/Buttons/ButtonAdd.vue';
+import ButtonAdd from '@/components/UI/Buttons/ButtonAdd.vue';
 </script>
 
 <template>
